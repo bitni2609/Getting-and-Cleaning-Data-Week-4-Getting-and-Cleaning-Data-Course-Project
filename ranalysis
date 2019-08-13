@@ -1,0 +1,89 @@
+library(dplyr)
+
+载入程辑包：‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+> library(data.table)
+data.table 1.12.2 using 2 threads (see ?getDTthreads).  Latest news: r-datatable.com
+
+载入程辑包：‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+> getwd
+function () 
+.Internal(getwd())
+<bytecode: 0x0000018f66454930>
+<environment: namespace:base>
+> getwd()
+[1] "C:/Users/lk/Desktop/R的工作目录/get and clean"
+> URL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+> destFile <- "CourseDataset.zip"
+> if (!file.exists(destFile)){
++     download.file(URL, destfile = destFile, mode='wb')
++ }
+trying URL 'https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip'
+Content type 'application/zip' length 62556944 bytes (59.7 MB)
+downloaded 59.7 MB
+
+> if (!file.exists("./UCI_HAR_Dataset")){
++     unzip(destFile)
++ }
+> if (!file.exists("./UCI_HAR_Dataset")){
++     +     unzip(destFile)
++     + }
+Error: unexpected '}' in:
+"    +     unzip(destFile)
+    + }"
+> unzip(destFile)
+> dateDownloaded <- date()
+> 
+> #Start reading files
+> setwd("./UCI_HAR_Dataset")
+Error in setwd("./UCI_HAR_Dataset") : cannot change working directory
+> setwd("./UCI_HAR_Dataset")
+Error in setwd("./UCI_HAR_Dataset") : cannot change working directory
+> setwd("C:/Users/lk/Desktop/R的工作目录/get and clean/UCI HAR Dataset")
+> ActivityTest <- read.table("./test/y_test.txt", header = F)
+> ActivityTrain <- read.table("./train/y_train.txt", header = F)
+> FeaturesTest <- read.table("./test/X_test.txt", header = F)
+> FeaturesTrain <- read.table("./train/X_train.txt", header = F)
+> 
+> SubjectTest <- read.table("./test/subject_test.txt", header = F)
+> SubjectTrain <- read.table("./train/subject_train.txt", header = F)
+> ActivityLabels <- read.table("./activity_labels.txt", header = F)
+> SubjectTest <- read.table("./test/subject_test.txt", header = F)
+> SubjectTrain <- read.table("./train/subject_train.txt", header = F)
+> FeaturesNames <- read.table("./features.txt", header = F)
+> FeaturesData <- rbind(FeaturesTest, FeaturesTrain)
+> SubjectData <- rbind(SubjectTest, SubjectTrain)
+> ActivityData <- rbind(ActivityTest, ActivityTrain)
+> names(ActivityData) <- "ActivityN"
+> names(ActivityLabels) <- c("ActivityN", "Activity")
+> Activity <- left_join(ActivityData, ActivityLabels, "ActivityN")[, 2]
+> names(SubjectData) <- "Subject"
+> names(FeaturesData) <- FeaturesNames$V2
+> DataSet <- cbind(SubjectData, Activity)
+> DataSet <- cbind(DataSet, FeaturesData)
+> subFeaturesNames <- FeaturesNames$V2[grep("mean\\(\\)|std\\(\\)", FeaturesNames$V2)]
+> DataNames <- c("Subject", "Activity", as.character(subFeaturesNames))
+> DataSet <- subset(DataSet, select=DataNames)
+> names(DataSet)<-gsub("^t", "time", names(DataSet))
+> names(DataSet)<-gsub("^f", "frequency", names(DataSet))
+> names(DataSet)<-gsub("Acc", "Accelerometer", names(DataSet))
+> names(DataSet)<-gsub("Gyro", "Gyroscope", names(DataSet))
+> names(DataSet)<-gsub("Mag", "Magnitude", names(DataSet))
+> names(DataSet)<-gsub("BodyBody", "Body", names(DataSet))
+> SecondDataSet<-aggregate(. ~Subject + Activity, DataSet, mean)
+> SecondDataSet<-SecondDataSet[order(SecondDataSet$Subject,SecondDataSet$Activity),]
+> write.table(SecondDataSet, file = "tidydata.txt",row.name=FALSE)
+> 
