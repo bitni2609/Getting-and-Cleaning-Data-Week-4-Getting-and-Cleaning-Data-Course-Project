@@ -1,4 +1,4 @@
-Johns Hopkins Data Science Specialization Getting and Cleaning Data Coursera Week 4 Class Project
+##Johns Hopkins Data Science Specialization Getting and Cleaning Data Coursera Week 4 Class Project
 
 R code for Cleaning and Working with Data
 
@@ -8,7 +8,7 @@ The data for this project can be downloaded here:
 
 https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 
-The R run_analysis.R code in this repository primarily performs these 5 functions:
+##The R run_analysis.R code in this repository primarily performs these 5 functions:
 
 Merges the training and the test sets to create one data set.
 
